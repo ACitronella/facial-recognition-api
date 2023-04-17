@@ -1,0 +1,8 @@
+numpy
+fastapi
+uvicorn[standard]
+face_recognition
+chardet
+requests
+python-multipart
+matplotlib
