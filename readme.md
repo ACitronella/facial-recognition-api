@@ -10,6 +10,15 @@ Requires python 3.9 or above.
 pip install numpy face-recognition fastapi "uvicorn[standard]" chardet requests python-multipart matplotlib
 ```
 
+`face-recognition` also require CMake to install.
+
+```bash
+winget install cmake
+brew install cmake
+```
+
+more detail for windows in [face-recognition's github issue](https://github.com/ageitgey/face_recognition/issues/175#issue-257710508).
+
 ### Run server
 
 ```bash
