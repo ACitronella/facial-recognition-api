@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile
+from fastapi import FastAPI, File, UploadFile, Form
 from io import BytesIO
 from PIL import Image
 import numpy as np
@@ -8,8 +8,9 @@ from typing import Union
 people = PeopleCollection(ids=[], imgs=[])
 app = FastAPI()
 
-@app.post("/face_registration")
-async def face_registration(id:str, file: UploadFile = File(...)):
+
+@app.post("/face_registeration")
+async def face_registeration(id:str = Form(...), file: UploadFile = File(...)):
     contents = await file.read() # <-- Important!
     img = Image.open(BytesIO(contents))
     img = np.array(img)
