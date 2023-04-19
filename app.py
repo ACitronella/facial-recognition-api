@@ -5,8 +5,6 @@ import numpy as np
 from people import PeopleCollection
 from util import locate_faces_in_image
 from typing import Union
-# from torchvision.transforms import functional as F
-# import model as M
 people = PeopleCollection(ids=[], imgs=[])
 app = FastAPI()
 
