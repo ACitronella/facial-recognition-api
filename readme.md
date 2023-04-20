@@ -45,11 +45,32 @@ requires
 - id: string
 - image: file(image)
 
-response with success or failed
+response prototype
+```json
+{
+    "success": boolean,
+    "id": string or null,
+    "message": string
+}
+
+```
 
 ### POST /face_recognition
 
 requires
 - image: file(image)
 
-response with list of location and id ("unknown" for unknown)
+response prototype
+```json
+{
+    "success": boolean,
+    "found_faces": [ // might be empty list or has more than 1 elem
+        {
+            "loc": ((x_min, y_min), (x_max, y_max)), // face location in the image as int
+            "id": string
+        },
+        ...
+    ],
+    "message": string
+}
+```

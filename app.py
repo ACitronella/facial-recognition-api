@@ -4,13 +4,13 @@ from PIL import Image
 import numpy as np
 from people import PeopleCollection
 from util import locate_faces_in_image
-from typing import Union
+from typing import Union, Optional
 people = PeopleCollection(ids=[], imgs=[])
 app = FastAPI()
 
 
 @app.post("/face_registeration")
-async def face_registeration(id:str = Form(...), file: UploadFile = File(...)):
+async def face_registeration(id:str = Form(...), file: UploadFile = File(...)) -> dict[str, Union[bool, Optional[str], tuple[tuple[int, int], tuple[int, int]]]]:
     contents = await file.read() # <-- Important!
     img = Image.open(BytesIO(contents))
     img = np.array(img)
@@ -22,14 +22,14 @@ async def face_registeration(id:str = Form(...), file: UploadFile = File(...)):
         y_min, y_max = (y0, y1) if y0 < y1 else (y1, y0)
         y_min, y_max, x_min, x_max = max(y_min-100, 0), min(y_max+100, img_h), max(x_min-100, 0), min(x_max+100, img_w)
         people.add_new_faces([id], [img[y_min:y_max, x_min:x_max]]) # assertion Error
-    except AssertionError:
-        return "face registeration failed, maybe try put a image with a face only"
-    except IndexError:
-        return "face registeration failed, maybe try put a image with a face only"
-    return "Success, '%s' was registered. a face was located around (%d, %d), (%d, %d)" % (id, x_min, y_min, x_max, y_max)
+    except AssertionError as e:
+        return {"success": False, "id": None, "loc": None, "message": str(e)} 
+    except IndexError as e:
+        return {"success": False, "id": None, "loc": None, "message": str(e)} 
+    return {"success": True, "id": id, "loc": ((x_min, y_min), (x_max, y_max))} 
 
 @app.post("/face_recognition")
-async def face_recognition(file: UploadFile = File(...)) -> Union[list, str]:
+async def face_recognition(file: UploadFile = File(...)) -> dict[str, Union[bool, str, list[dict[str, Union[str, tuple[tuple[int, int], tuple[int, int]]]]]]]:
     contents = await file.read() # <-- Important!
     img = Image.open(BytesIO(contents))
     img = np.array(img)
@@ -45,9 +45,8 @@ async def face_recognition(file: UploadFile = File(...)) -> Union[list, str]:
             face_location_with_names.append({"loc": ((x_min, y_min), (x_max, y_max)), 
                                              "id": predicted_ids[0] if predicted_ids else "unknown"})
     except AssertionError as e:
-        print(e)
-        return "face reconition failed " + str(e) 
-    return face_location_with_names
+        return {"success": False, "found_face": [], "message": "face reconition failed " + str(e)} 
+    return {"success": True, "found_faces": face_location_with_names, "message": "hopefully face was found here if it exists"}
 @app.get("/")
 def hello_world():
     return "hello world"
