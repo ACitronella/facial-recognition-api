@@ -17,13 +17,15 @@ async def face_registeration(id:str = Form(...), file: UploadFile = File(...)):
     img_h, img_w, _ = img.shape
     try:
         face_locations = locate_faces_in_image(img)
-        y0, x0, y1, x1 = face_locations[0]
+        y0, x0, y1, x1 = face_locations[0] # index error
         x_min, x_max = (x0, x1) if x0 < x1 else (x1, x0)
         y_min, y_max = (y0, y1) if y0 < y1 else (y1, y0)
         y_min, y_max, x_min, x_max = max(y_min-100, 0), min(y_max+100, img_h), max(x_min-100, 0), min(x_max+100, img_w)
-        people.add_new_faces([id], [img[y_min:y_max, x_min:x_max]])
+        people.add_new_faces([id], [img[y_min:y_max, x_min:x_max]]) # assertion Error
     except AssertionError:
-        return "face registeration failed, maybe try put a image with only a face"
+        return "face registeration failed, maybe try put a image with a face only"
+    except IndexError:
+        return "face registeration failed, maybe try put a image with a face only"
     return "Success, '%s' was registered. a face was located around (%d, %d), (%d, %d)" % (id, x_min, y_min, x_max, y_max)
 
 @app.post("/face_recognition")
