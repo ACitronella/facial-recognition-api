@@ -3,7 +3,7 @@ from io import BytesIO
 from PIL import Image
 import numpy as np
 from people import PeopleCollection
-from util import locate_faces_in_image, preprocessing_image_pil
+from util import locate_faces_in_image
 from typing import Union, Optional
 people = PeopleCollection(ids=[], imgs=[])
 app = FastAPI()
@@ -13,7 +13,7 @@ app = FastAPI()
 async def face_registeration(id:str = Form(...), file: UploadFile = File(...)) -> dict[str, Union[bool, Optional[str], tuple[tuple[int, int], tuple[int, int]]]]:
     contents = await file.read()
     img = Image.open(BytesIO(contents)).convert("RGB")
-    img = preprocessing_image_pil(img)
+    # img = preprocessing_image_pil(img)
     img = np.array(img)
     img_h, img_w, _ = img.shape
     face_locations = locate_faces_in_image(img)
@@ -33,7 +33,7 @@ async def face_registeration(id:str = Form(...), file: UploadFile = File(...)) -
 async def face_recognition(file: UploadFile = File(...)) -> dict[str, Union[bool, str, list[dict[str, Union[str, tuple[tuple[int, int], tuple[int, int]]]]]]]:
     contents = await file.read() # <-- Important!
     img = Image.open(BytesIO(contents)).convert("RGB")
-    img = preprocessing_image_pil(img)
+    # img = preprocessing_image_pil(img)
     img = np.array(img)
     img_h, img_w, _ = img.shape
     face_locations = locate_faces_in_image(img)
