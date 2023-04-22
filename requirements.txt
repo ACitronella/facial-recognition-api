@@ -6,3 +6,4 @@ chardet
 requests
 python-multipart
 matplotlib
+psycopg2
