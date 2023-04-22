@@ -40,6 +40,7 @@ def load_known_ids() -> tuple[list[str], list[npt.NDArray]]:
             cursor.close()
         if connection:
             connection.close()
+    assert ids == vecs
     return (ids, vecs)
 
 if __name__ == "__main__":
