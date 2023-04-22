@@ -9,8 +9,8 @@ people = PeopleCollection(ids=[], imgs=[])
 app = FastAPI()
 
 
-@app.post("/face_registeration")
-async def face_registeration(id:str = Form(...), file: UploadFile = File(...)) -> dict[str, Union[bool, Optional[str], tuple[tuple[int, int], tuple[int, int]]]]:
+@app.post("/face_registration")
+async def face_registration(id:str = Form(...), file: UploadFile = File(...)) -> dict[str, Union[bool, Optional[str], tuple[tuple[int, int], tuple[int, int]]]]:
     contents = await file.read()
     img = Image.open(BytesIO(contents)).convert("RGB")
     img = preprocessing_image_pil(img)
