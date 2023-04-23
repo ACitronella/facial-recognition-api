@@ -39,7 +39,7 @@ python test_app.py
 
 response with "hello world"
 
-### POST /face_registeration
+### POST /face_registration
 
 requires
 - id: string
