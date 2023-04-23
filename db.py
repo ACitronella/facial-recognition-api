@@ -21,11 +21,11 @@ def load_known_ids() -> tuple[list[str], list[npt.NDArray]]:
     vecs = []
     try:
         pg_connection_dict["dbname"] = "StudentFace"
-        connection = psycopg2.connect(**pg_connection_dict)
+        connection = psycopg2.connect(DATABASE_URL)
         cursor = connection.cursor()
 
         # query
-        cursor.execute("SELECT studentId, faceId FROM StudentFace;")
+        cursor.execute('SELECT "studentId", "faceId" FROM attendance."StudentFace";')
         while (row:=cursor.fetchone()) != None:
             id, vec = row
             print(id, vec, type(vec))
