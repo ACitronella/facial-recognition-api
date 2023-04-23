@@ -9,10 +9,10 @@ from db import db
 
 if db:
     ids, features = db.load_known_ids()
-    print("existing ids: ", ids)
     people = PeopleCollection.from_existing_vecs(ids, features)
 else:
     people = PeopleCollection()
+print("existing ids: ", people.ids)
 app = FastAPI()
 
 @app.post("/face_registeration")
