@@ -53,27 +53,8 @@ class PostgresDB(DB):
                 connection.close()
         return success
 
-    def register_many(self, ids: list[str], vecs:list[npt.NDArray]) -> bool:
-        raise NotImplementedError()
-        success = True
-        connection = cursor = None
-        try:
-            connection = psycopg2.connect(self.database_url)
-            cursor = connection.cursor()
-            l = list(zip(ids, [list(v) for v in vecs]))
-            print(l)
-            cursor.executemany('INSERT INTO attendance."StudentFace" ("studentId", "faceId") VALUES (%s);', (l))
-            connection.commit()
-        except (Exception, psycopg2.Error) as error:
-            print("Error in adding new faces in db", error)
-            success = False
-        finally:
-            # closing database connection.
-            if cursor:
-                cursor.close()
-            if connection:
-                connection.close()
-        return success
+    def register_many(self, ids: list[str], vecs:list[npt.NDArray]) -> list[bool]:
+        return [self.register_one(id, vec) for id, vec in zip(ids, vecs)] # i dont think that we should use this, implement it just in case
 
 if __name__ == "__main__":
     print(PostgresDB().load_known_ids())
