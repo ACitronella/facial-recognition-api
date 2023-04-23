@@ -7,5 +7,3 @@ except ImportError:
     pass
 
 DATABASE_URL = os.getenv("DATABASE_URL", None)
-assert DATABASE_URL != None
-

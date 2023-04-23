@@ -7,9 +7,12 @@ from util import locate_faces_in_image
 from typing import Union, Optional
 from db import db
 
-ids, features = db.load_known_ids()
-print("existing ids: ", ids)
-people = PeopleCollection.from_existing_vecs(ids, features)
+if db:
+    ids, features = db.load_known_ids()
+    print("existing ids: ", ids)
+    people = PeopleCollection.from_existing_vecs(ids, features)
+else:
+    people = PeopleCollection()
 app = FastAPI()
 
 @app.post("/face_registeration")
@@ -46,9 +49,9 @@ async def face_recognition(file: UploadFile = File(...)) -> dict[str, Union[bool
             x_min, x_max = (x0, x1) if x0 < x1 else (x1, x0)
             y_min, y_max = (y0, y1) if y0 < y1 else (y1, y0)
             y_min, y_max, x_min, x_max = max(y_min-100, 0), min(y_max+100, img_h), max(x_min-100, 0), min(x_max+100, img_w)
-            predicted_ids = people.compare_face_with_registered_faces(img[y_min:y_max, x_min:x_max])
+            predicted_id = people.compare_face_with_registered_faces(img[y_min:y_max, x_min:x_max])
             face_location_with_names.append({"loc": ((x_min, y_min), (x_max, y_max)), 
-                                             "id": predicted_ids[0] if predicted_ids else "unknown"})
+                                             "id": predicted_id if predicted_id else "unknown"})
     except AssertionError as e:
         return {"success": False, "found_face": [], "message": "face reconition failed " + str(e)} 
     return {"success": True, "found_faces": face_location_with_names, "message": "hopefully face was found here if it exists"}
