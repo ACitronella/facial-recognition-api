@@ -5,10 +5,11 @@ import numpy as np
 from people import PeopleCollection
 from util import locate_faces_in_image
 from typing import Union, Optional
-from db import load_known_ids
+from db import db
 
-ids, vecs = load_known_ids()
-people = PeopleCollection.from_existing_vecs(ids, vecs)
+ids, features = db.load_known_ids()
+print("existing ids: ", ids)
+people = PeopleCollection.from_existing_vecs(ids, features)
 app = FastAPI()
 
 @app.post("/face_registeration")

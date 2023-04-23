@@ -1,6 +1,8 @@
 import face_recognition
 import numpy as np
 import numpy.typing as npt
+from db import db
+
 class PeopleCollection:
     def __init__(self):
         self.ids = []
@@ -25,13 +27,18 @@ class PeopleCollection:
             id_list.append(self.ids[face_id])
         return id_list
 
-    def add_new_faces(self, names: list[str], imgs: list[np.ndarray]):
-        assert len(names) == len(imgs)
-        self.ids.extend(names)
-        try:
-            self.features.extend([PeopleCollection.extract_face_encoding_for_registeration(img) for img in imgs])
-        except AssertionError: # if add failed, make name same length as feature to cutout unregisterable one
-            self.ids = self.ids[:len(self.features)]
+    def add_new_faces(self, ids: list[str], imgs: list[npt.NDArray]):
+        assert len(ids) == len(imgs)
+        for id, img in zip(ids, imgs):
+            try:
+                vec = PeopleCollection.extract_face_encoding_for_registeration(img)
+                insert_sucess = db.register_one(id, vec)
+                assert insert_sucess
+                self.ids.append(id)
+                self.features.append(vec)
+                
+            except AssertionError: # if add failed, skip it
+                print('face not found in register or add into db failed')
 
     def add_existing_faces(self, ids: list[str], vecs: list[npt.NDArray]):
         assert len(ids) == len(vecs)

@@ -2,3 +2,4 @@ __pycache__
 .env
 datasets
 .gitignore
+face_recognition.ipynb
