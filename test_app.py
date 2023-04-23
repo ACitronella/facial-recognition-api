@@ -10,7 +10,7 @@ known_image = image_reader(dataset_path / "biden.webp")
 
 
 print("creating collection of every people we want to compare")
-people = PeopleCollection(ids=["biden"], imgs=[known_image])
+people = PeopleCollection()
 
 # load a group image
 group_image = image_reader(dataset_path / "biden group 2.jpg")
