@@ -8,6 +8,7 @@ Requires python 3.9 or above.
 
 ```bash
 pip install -r requirements.txt
+pip install python-dotenv # for test_app.py, not required
 ```
 
 `face-recognition` also require CMake to install.
