@@ -5,9 +5,11 @@ import numpy as np
 from people import PeopleCollection
 from util import locate_faces_in_image
 from typing import Union, Optional
-people = PeopleCollection(ids=[], imgs=[])
-app = FastAPI()
+from db import load_known_ids
 
+ids, vecs = load_known_ids()
+people = PeopleCollection.from_existing_vecs(ids, vecs)
+app = FastAPI()
 
 @app.post("/face_registeration")
 async def face_registeration(id:str = Form(...), file: UploadFile = File(...)) -> dict[str, Union[bool, Optional[str], tuple[tuple[int, int], tuple[int, int]]]]:
