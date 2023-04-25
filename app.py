@@ -53,9 +53,9 @@ async def face_recognition(file: UploadFile = File(...)) -> dict[str, Union[bool
             face_location_with_names.append({"loc": ((x_min, y_min), (x_max, y_max)), 
                                              "id": predicted_id if predicted_id else "unknown"})
     except AssertionError as e:
-        return {"success": False, "found_face": [], "message": "face reconition failed " + str(e)} 
+        return {"success": False, "found_faces": [], "message": "face reconition failed " + str(e)} 
     return {"success": True, "found_faces": face_location_with_names, "message": "hopefully face was found here if it exists"}
-    
+
 @app.get("/")
 def hello_world():
     return "hello world"
